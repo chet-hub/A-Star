@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>A-Start: MITT presentation</title>
+    <meta name="description" content="A-Frame Examples">
+    <script src="js/aframe.1.1.0.min.js"></script>
+    <script src="js/aframe-environment-component.min.js"></script>
+    <script src="js/a_star_3d.js"></script>
+    <script src="js/ui_3d.js"></script>
+    <script>
+
+        window.onload = function () {
+
+            const aStar = new A_star_3d();
+            const ui = UI_3D();
+
+            aStar.setCode(ui.Object_3d.Start, 50, 36);
+            aStar.setCode(ui.Object_3d.Wall, 50, 43);
+            aStar.setCode(ui.Object_3d.Goal, 50, 59);
+
+
+            ui.initMap(aStar.getDate())
+
+            const buildPath_3d = ()=>{
+                const starts = aStar.findCode(ui.Object_3d.Start)
+                const goals = aStar.findCode(ui.Object_3d.Goal)
+                if(starts.length==1 && goals.length==1){
+                    ui.removeLines()
+                    const steps = aStar.findPath(starts[0], goals[0]);
+                    ui.addLines(steps)
+                }
+            }
+
+            ui.addCaseListener((x, y) => {
+                console.log('addCase:', x, y)
+                aStar.setCode(ui.Object_3d.Wall, x, y);
+                buildPath_3d()
+            })
+            ui.removeCaseListener((x, y) => {
+                console.log('removeCase:', [x, y])
+                aStar.setCode(ui.Object_3d.Empty, x, y);
+                buildPath_3d()
+            })
+            ui.removeSphereListener((x, y, name) => {
+                console.log('removeSphere:', [x, y, name])
+                aStar.setCode(ui.Object_3d.Empty, x, y);
+                ui.removeLines()
+            })
+            ui.addSphereListener((x, y, name) => {
+                console.log('addSphere:', [x, y, name])
+                if (name === 'start') {
+                    aStar.setCode(ui.Object_3d.Start, x, y);
+                    buildPath_3d()
+                } else if (name === 'goal') {
+                    aStar.setCode(ui.Object_3d.Goal, x, y);
+                    buildPath_3d()
+                }
+            })
+
+
+        }
+    </script>
+</head>
+
+<body>
+
+<a-scene cursor="rayOrigin: mouse">
+
+    <a-entity classname="map" environment="preset: default; groundColor: #445; grid: cross"></a-entity>
+
+    <a-assets>
+        <img id="crate" src="images/crate.jpg">
+    </a-assets>
+
+    <a-camera id="player" position="0 10 0" wasd-controls="fly:true" look-controls></a-camera>
+
+
+<!--    <a-box classname='box' position="1 1 1" depth="2" height="2" width="2" material="src: #crate"></a-box>-->
+<!--    <a-sphere classname='start' position="9 0.5 -5" radius="0.5" color="red"></a-sphere>-->
+<!--    <a-sphere classname='goal' position="11 0.5 -5" radius="0.5" color="yellow"></a-sphere>-->
+<!--    <a-entity classname='line' line="start: 9 0.5 -5; end: 11 0.5 -5; color: red"></a-entity>-->
+
+</a-scene>
+
+</body>
+</html>
