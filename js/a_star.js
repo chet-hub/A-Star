@@ -1,6 +1,5 @@
 class A_star_3d {
     constructor() {
-        const that = this;
         this.map_data = []
         this.w = 100;
         this.h = 100;
@@ -41,6 +40,30 @@ class A_star_3d {
         return str.split(",").map(str => parseInt(str))
     }
 
+    buildPathBySteps(start, goal, steps) {
+        if (steps.length === 0) return;
+        let result = [];
+        let current = goal
+        while (current !== start) {
+            result.push(current);
+            current = steps.get(current)
+        }
+        result.push(start);
+        result = result.reverse();
+
+        const lines = [];
+        let from = result[0]
+        let to;
+        for (let i = 1; i < result.length; i++) {
+            to = result[i]
+            const f = this.toCoordinate(from)
+            const t = this.toCoordinate(to)
+            lines.push([f[0], f[1], t[0], t[1]])
+            from = to;
+        }
+        return lines;
+    }
+
     newQueue() {
         const that = this;
 
@@ -48,10 +71,6 @@ class A_star_3d {
             constructor() {
                 this.data = []
             }
-
-            // toCoordinate = (str) => {
-            //     return str.split(",").map(str => parseInt(str))
-            // }
 
             notEmpty() {
                 return this.data.length > 0
@@ -98,33 +117,7 @@ class A_star_3d {
     distance(from, to) {
         from = this.toCoordinate(from)
         to = this.toCoordinate(to)
-        return Math.abs(from[0] - to[0]) + Math.abs(from[1] - to[1]);
-    }
-
-    buildPathBySteps(start, goal, steps) {
-        if (steps.length === 0) return;
-        let result = [];
-        let current = goal
-        while (current !== start) {
-            result.push(current);
-            current = steps.get(current)
-        }
-        result.push(start);
-        result = result.reverse();
-
-        // this.reset();
-
-        const lines = [];
-        let from = result[0]
-        let to;
-        for (let i = 1; i < result.length; i++) {
-            to = result[i]
-            const f = this.toCoordinate(from)
-            const t = this.toCoordinate(to)
-            lines.push([f[0], f[1], t[0], t[1]])
-            from = to;
-        }
-        return lines;
+        return Math.pow((from[0] - to[0])*(from[0] - to[0]) + (from[1] - to[1]) * (from[1] - to[1]),0.5);
     }
 
     findPath(start, goal) {
@@ -141,6 +134,9 @@ class A_star_3d {
         steps.set(start, null);
         costSoFar.set(start, 0);
 
+        //////////////////
+        //A star algorithm
+        //////////////////
         while (frontier.notEmpty()) {
             const current = frontier.get();
             if (current === goal) {
@@ -161,9 +157,6 @@ class A_star_3d {
     }
 }
 
-// const aStar = new A_star_3d();
-// const steps = aStar.findPath([25, 2], [25, 40]);
-// console.log(steps);
 
 
 
