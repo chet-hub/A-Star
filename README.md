@@ -54,18 +54,15 @@ findPath(start, goal) {
 
 1. Control the camera
    
-
-     click A - move camera left
-     click D - move camera right
-     click w - move camera right
-     click s - move camera back
-     Hold down the left mouse button and move - change the direction of the camera
+     - click `A` move camera left
+     - click `D` move camera right
+     - click `W` move camera right
+     - click `S` move camera back
+     - `Hold down the left mouse button and move` - change the direction of the camera
       
 2. Control the objects in the game
-   
 
-    click the balls or the cubic boxes, then click the ground 
-    - pick up the objects, and drop them on the point that you click on the ground
+    - `click the balls or the cubic boxes, then click the ground`  - pick up the objects, and drop them on the point that you click on the ground
 
 
 
